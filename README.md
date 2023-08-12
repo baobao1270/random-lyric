@@ -1,45 +1,39 @@
 # Fortune Lyric - 随机洛天依歌曲歌词
 
-此项目提供了一个洛天依的经典曲目歌词选段的数据库，并以此实现了一个获得随机歌词的程序。
+> 总有一些不可思议的歌词<br>轻而易举地唱迸<br>人们历经风吹雨打的心
+> 
+> 　　　　-- _[幽天歌](https://space.bilibili.com/592784581), 「[中V宝藏歌曲挖掘站](https://vcmusic.org)」成员_
+
+此项目提供了一个 [洛天依](https://zh.wikipedia.org/zh-cn/%E6%B4%9B%E5%A4%A9%E4%BE%9D) 的经典曲目歌词选段的数据库，并以此实现了一个获得随机歌词的程序。
 
 灵感来源：[一言](https://hitokoto.cn/)、[Fortune](https://en.wikipedia.org/wiki/Fortune_(Unix))。
+
+歌词保存在 [database.txt](database.txt) 中。若您需要提交歌词，请提交 PR 或者联系 i@lty.vc。提交歌词时，请遵守 #[数据库格式与约定](#数据库格式与约定)。
 
 ## 使用方法
 
 支持的使用方法包括：
- - 在任何支持 bash 的系统（Windows 需要额外安装 bash，Linux / MacOS 一般不需要）中，通过调用命令来获得随机歌词，也可以配置为每次登陆 SSH 时显示。
- - 通过网页 API 获得随机歌词。
- - 在自己的项目、程序中，嵌入数据库文本文件或 JSON 文件，并进行调用。
+ - 安装在电脑中，通过命令行输入 `fortune-lyric`，该命令将从数据库中随机选取一个歌词输出。（需要安装 bash；Windows 需要单独安装 bash，Linux/macOS 一般自带）
+ - 也可以配置为 MOTD，在每次打开终端或登陆 SSH 时，显示随机歌词。
+ - 通过网页 API 调用，在自己的博客或 App 中，嵌入随机歌词。（请遵守下文 #[版权](#版权) 一节的相关规定）
+ - 在自己的程序中嵌入数据库，自行实现随机歌词。（请遵守下文 #[版权](#版权) 一节的相关规定）
 
 ### 在 bash 中使用
 
-**抽取结果为单行的版本：**
-
-```bash
-curl -L https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
-```
-
-中国大陆镜像：
+**单行歌词版：**
 ```bash
 curl -L https://lty.vc/lotd/bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
 ```
-
 显示效果如：
 ```
+$ fortune-lyric
 思念的含义在无尽生命中淡去 帷幕落下喝彩响起 片刻后都沉寂
 ```
 
-**抽取结果为多行的版本：**
-
-```bash
-curl -L https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric-banner.bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
-```
-
-中国大陆镜像：
+**多行歌词版：**
 ```bash
 curl -L https://lty.vc/lotd/banner-bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
 ```
-
 显示效果如：
 ```
 $ fortune-lyric
@@ -68,7 +62,7 @@ curl -L <安装地址> -o /etc/update-motd.d/25-fortune-lyric && chmod +x /etc/u
 直接打开 https://lty.vc/lotd 即可获得随机歌词。
 
 ```
-curl -L lty.vc/lotd
+$ curl -L lty.vc/lotd
 
 思念的含义在无尽生命中淡去
 帷幕落下喝彩响起 片刻后都沉寂
@@ -95,6 +89,65 @@ curl -L lty.vc/lotd
 | https://lty.vc/lotd/txt           | 单行文本格式           |
 | https://lty.vc/lotd/source-txt    | 人类可读 (源代码) 格式 |
 
+## 数据库格式与约定
+数据收录要求为：
+ 1. 必须是 **洛天依** 演唱的原创歌曲，语言不限。
+ 2. 推荐向我们提交那些有代表性、引起大家共鸣的歌词。
+
+### 数据库的结构
+数据库 (database) 由「块 (quoteblock)」组成，每一块包含若干个「行 (line)」。
+
+每一块包含以下内容：
+ - 所引用的歌词内容，称为「歌词行 (`lyricLine`)」
+ - 歌词的作者、歌曲名称、歌曲年份，在一行内书写，称为「元数据行 (`metadataLine`)」
+
+块与块之间用 30 个 dash (`-`) 分隔。行与行之间用 Unix-Style 换行符 (`<LF>`) 分隔。
+
+### 块的格式
+```
+歌词的第一行
+歌词的第二行(可选)
+歌词的第三行(可选)
+歌词的第四行(可选)
+        -- 歌词作者 《歌曲名称》, 歌曲年份
+```
+
+对于块的格式，另外有以下约定：
+ 1. 任意行，不管是元数据行，还是歌词行，行前、行后的空格或不可见字符均会被忽略。
+ 2. **歌词行**中可以包含表示停顿或语义分割的空格。一般来说，是否加空格，按照原作者提供的歌词文本为准。歌词中添加的空格，始终是英文空格（`U+0020`），不要添加中文全角空格（`U+3000`）。
+ 3. 元数据行缩进 8 个空格，即第 9 个字符（数组下标为 8）为 `-`。这是为了统一风格、使文本美观易读而制定的规范。程序处理时，应当忽略元数据头、尾的空格。元数据行末尾不应有任何空格或不可显示字符。
+ 4. **元数据行**的歌曲作者、歌曲名称、歌曲年份前，均应添加英文空格（`U+0020`）。将所有不可显示字符表示出来的元数据行应是如下所示：
+    ```
+    <SPACE*8>--<SPACE><歌词作者><SPACE>《<歌曲名称>》,<SPACE><歌曲年份><LF>
+    ```
+ 5. **歌词作者**为**歌曲的作词人，而不是歌曲的作曲、编曲、策划、调教或 UP 主**。请注意区分，并从 Staff 表中查找核对。歌词作者可以有多个，并始终在程序中应以数组形式存储。有多个作词人的，用英文斜杠 `/` 分开。
+ 6. **歌曲名称**前、后为中文书名号。
+ 7. **歌曲年份**为歌曲的发布年份，为 4 位阿拉伯数字，以公元计算，时区始终为发布时的北京时间所在时区。歌曲发布于网络平台的，为平台显示的首版投稿发布时间；发布于专辑的，为专辑发布时间；发布于预售专辑的，为专辑开始出荷的时间。
+
+### 长度限制
+在长度限制的说明中，遵循以下定义：
+ 1. 字符长度：字符串「按照 GB18030 编码的字节数」与「显示长度」中较大者；即 `strlen = max(bytelen, displen)`
+ 2. 显示长度：字符串在终端中显示时的长度，按照中日韩越 (CJKV) 字符宽度为 2、英文字母及西欧字符宽度为 1 计算；即 `displen = str.forEach(char => char.isCJKV ? 2 : 1).sum()`
+ 3. 字节长度：字符串在 GB18030 编码下的字节；即 `bytelen = str.encode('gb18030').length`
+
+基于以上定义，字符长度遵循以下限制：
+ 1. 任意一个块中，歌词不得超过 `4` 行。（不含元数据行）
+ 2. 任意一行（不含元数据行）的字符长度不得超过 `30`。
+ 3. 将所有行（不含元数据行）用英文空格（`U+0020`）连接后，字符长度不超过 `80`。
+
+### 数据库格式的 ABNF 描述
+```abnf
+database = quoteblock *(quoteblockBreak quoteblock)
+quoteblock = 1*4lyricLine metadataLine
+quoteblockBreak = 30"-"
+lyricLine = 1*30VCHAR LF
+metadataLine = 8SP 2"-" SP author SP "《" songName "》," SP year LF
+author = *VCHAR
+songName = *VCHAR
+year = 4DIGIT
+```
+
+注：`VCHAR` 为可见字符，在本文定义中不仅包括 ASCII 可见字符，也包括 Unicode 可见字符。
 
 ## 版权
 
