@@ -168,7 +168,11 @@ def build_cloudflare_kv_publish(namespace_id: str):
               'dist/fortune-lyric.json 不存在，'
               'build_cloudflare_kv_publish() 必须在 build_json() 之后调用')
         sys.exit(-2)
-    os.system(f"wrangler kv:key put --namespace-id {namespace_id} fortune-lyric --path dist/fortune-lyric.json")
+    result = os.system(f"wrangler kv:key put --namespace-id {namespace_id} fortune-lyric --path dist/fortune-lyric.json")
+    print(colored('yellow', 'Info:'), "命令返回值：", result)
+    if result != 0:
+        print(colored('red', 'Error:'), 'wrangler kv:key put 执行失败')
+        sys.exit(-2)
 
 
 if __name__ == '__main__':

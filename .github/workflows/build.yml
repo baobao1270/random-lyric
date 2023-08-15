@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - run: npm i -g wrangler
+      - run: python3 make.py
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 171f09ad4e5e98bf4de28d465e116904
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/fortune-lyric-banner.bash
+            dist/fortune-lyric.bash
+            dist/fortune-lyric-minified.json
+            dist/fortune-lyric.json
+            dist/fortune-lyric-source.txt
