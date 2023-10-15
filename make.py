@@ -45,8 +45,16 @@ def print_file_size(filename: str):
 
 
 def load():
+    with open(FILENAMES.SOURCE_DATABASE, "rb") as f:
+        if b'\r' in f.read():
+            print(colored('red', 'Error:'), '数据库文件中不得包含 CR (\\r) 字符')
+            sys.exit(-2)
     with open(FILENAMES.SOURCE_DATABASE, encoding='utf-8') as f:
-        database = f.read().strip()
+        database = f.read()
+        if not database.endswith('\n'):
+            print(colored('red', 'Error:'), '数据库文件应该以 LF (\\n) 结尾')
+            sys.exit(-2)
+        database = database.strip()
         database = [i.strip() for i in database.split('-' * 30)]
         if (database[0] == '') or (database[-1] == ''):
             print(colored('red', 'Error:'), '遇到了空的歌词块 (quoteblock)')
