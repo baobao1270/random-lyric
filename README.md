@@ -24,23 +24,23 @@ Fortune Lyric 支持多种使用方式：
 | GitHub Release                   | API                       | Description           |
 | -------------------------------- | ------------------------- | --------------------- |
 | [fortune-lyric.sh]               | [bash]                    | 单行歌词 Shell 脚本     |
-| [fortune-lyric-banner.sh]        | [bash-banner]             | 多行歌词 Shell 脚本     |
+| [fortune-lyric-multiline.sh]     | [bash-multiline]          | 多行歌词 Shell 脚本     |
 | [fortune-lyric.json]             | -                         | JSON 格式              |
 | [fortune-lyric.min.json]         | [json]                    | JSON 格式（最小化）     |
 | [fortune-lyric.txt]              | [text]                    | 单行文本格式           |
 | -                                | GET https://lty.vc/lyric  | API 调用接口           |
 
-[fortune-lyric.sh]:        https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.sh
-[fortune-lyric-banner.sh]: https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric-banner.sh
-[fortune-lyric.json]:      https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.json
-[fortune-lyric.min.json]:  https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.min.json
-[fortune-lyric.txt]:       https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.txt
-[database.txt]:            https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/database.txt
-[bash]:                    https://lty.vc/lyric/bash
-[bash-banner]:             https://lty.vc/lyric/bash-banner
-[json]:                    https://lty.vc/lyric/json
-[text]:                    https://lty.vc/lyric/text
-[database]:                https://lty.vc/lyric/database
+[fortune-lyric.sh]:           https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.sh
+[fortune-lyric-multiline.sh]: https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric-multiline.sh
+[fortune-lyric.json]:         https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.json
+[fortune-lyric.min.json]:     https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.min.json
+[fortune-lyric.txt]:          https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.txt
+[database.txt]:               https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/database.txt
+[bash]:                       https://lty.vc/lyric/bash
+[bash-multiline]:             https://lty.vc/lyric/bash-multiline
+[json]:                       https://lty.vc/lyric/json
+[text]:                       https://lty.vc/lyric/text
+[database]:                   https://lty.vc/lyric/database
 
 ### 在 Bash 中使用
 
@@ -56,7 +56,7 @@ $ fortune-lyric
 
 **多行歌词版：**
 ```bash
-curl -L https://lty.vc/lyric/bash-banner -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
+curl -L https://lty.vc/lyric/bash-multiline -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
 ```
 显示效果如：
 ```
