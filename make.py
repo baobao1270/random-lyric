@@ -3,7 +3,17 @@ import re
 import sys
 import json
 import shutil
+import argparse
 
+class FILENAMES:
+    SOURCE_DATABASE       = 'database.txt'
+    TEMPLATE_SHELL_SCRIPT = 'template.sh'
+    DIST_SHELL            = 'dist/fortune-lyric.sh'
+    DIST_SHELL_MULTILINE  = 'dist/fortune-lyric-multiline.sh'
+    DIST_JSON             = 'dist/fortune-lyric.json'
+    DIST_JSON_MINIFIED    = 'dist/fortune-lyric.min.json'
+    DIST_TEXT             = 'dist/fortune-lyric.txt'
+    DIST_DB               = 'dist/database.txt'
 
 def colored(color: str, text: str) -> str:
     colors = {
@@ -35,8 +45,16 @@ def print_file_size(filename: str):
 
 
 def load():
-    with open('database.txt', encoding='utf-8') as f:
-        database = f.read().strip()
+    with open(FILENAMES.SOURCE_DATABASE, "rb") as f:
+        if b'\r' in f.read():
+            print(colored('red', 'Error:'), '数据库文件中不得包含 CR (\\r) 字符')
+            sys.exit(-2)
+    with open(FILENAMES.SOURCE_DATABASE, encoding='utf-8') as f:
+        database = f.read()
+        if not database.endswith('\n'):
+            print(colored('red', 'Error:'), '数据库文件应该以 LF (\\n) 结尾')
+            sys.exit(-2)
+        database = database.strip()
         database = [i.strip() for i in database.split('-' * 30)]
         if (database[0] == '') or (database[-1] == ''):
             print(colored('red', 'Error:'), '遇到了空的歌词块 (quoteblock)')
@@ -104,25 +122,25 @@ def load():
 
 
 def build_json(database: list[dict]):
-    os.makedirs('dist', exist_ok=True)
-    with open('dist/fortune-lyric.json', 'w+', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(FILENAMES.DIST_JSON), exist_ok=True)
+    with open(FILENAMES.DIST_JSON, 'w+', encoding='utf-8') as f:
         f.write(json.dumps(database, ensure_ascii=False, indent=4))
-    print_file_size('dist/fortune-lyric.json')
-    with open('dist/fortune-lyric-minified.json', 'w+', encoding='utf-8') as f:
-        f.write(json.dumps(database, ensure_ascii=False))
-    print_file_size('dist/fortune-lyric-minified.json')
+    print_file_size(FILENAMES.DIST_JSON)
+    with open(FILENAMES.DIST_JSON_MINIFIED, 'w+', encoding='utf-8') as f:
+        f.write(json.dumps(database, ensure_ascii=True))
+    print_file_size(FILENAMES.DIST_JSON_MINIFIED)
 
 
-def build_plain(database: list[dict]):
+def build_text(database: list[dict]):
     lines = [
         ' '.join(quote['lines']).replace(' ', '\u3000')
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs('dist', exist_ok=True)
-    with open('dist/fortune-lyric.txt', 'w+', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(FILENAMES.DIST_TEXT), exist_ok=True)
+    with open(FILENAMES.DIST_TEXT, 'w+', encoding='utf-8') as f:
         f.write(lines)
-    print_file_size('dist/fortune-lyric.txt')
+    print_file_size(FILENAMES.DIST_TEXT)
 
 
 def build_bash(database: list[dict]):
@@ -131,16 +149,16 @@ def build_bash(database: list[dict]):
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs('dist', exist_ok=True)
-    with open('tmpl.sh', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(FILENAMES.DIST_SHELL), exist_ok=True)
+    with open(FILENAMES.TEMPLATE_SHELL_SCRIPT, encoding='utf-8') as f:
         tmpl = f.read().strip()
-    with open('dist/fortune-lyric.bash', 'w+', encoding='utf-8') as f:
+    with open(FILENAMES.DIST_SHELL, 'w+', encoding='utf-8') as f:
         f.write(tmpl.replace('%%DATABASE%%', lines) + "\n")
-    print_file_size('dist/fortune-lyric.bash')
-    os.chmod('dist/fortune-lyric.bash', 0o755)
+    print_file_size(FILENAMES.DIST_SHELL)
+    os.chmod(FILENAMES.DIST_SHELL, 0o755)
 
 
-def build_bash_banner(database: list[dict]):
+def build_bash_multiline(database: list[dict]):
     lines = [
         "    \"" + '\\n'.join(quote['lines']) + "\\n\\n" +
         (" " * (max([len(i.encode("gb18030")) for i in quote['lines']]) - 8)) +
@@ -148,38 +166,45 @@ def build_bash_banner(database: list[dict]):
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs('dist', exist_ok=True)
-    with open('tmpl.sh', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(FILENAMES.DIST_SHELL_MULTILINE), exist_ok=True)
+    with open(FILENAMES.TEMPLATE_SHELL_SCRIPT, encoding='utf-8') as f:
         tmpl = f.read().strip()
-    with open('dist/fortune-lyric-banner.bash', 'w+', encoding='utf-8') as f:
+    with open(FILENAMES.DIST_SHELL_MULTILINE, 'w+', encoding='utf-8') as f:
         f.write(tmpl.replace('%%DATABASE%%', lines) + "\n")
-    print_file_size('dist/fortune-lyric-banner.bash')
-    os.chmod('dist/fortune-lyric-banner.bash', 0o755)
+    print_file_size(FILENAMES.DIST_SHELL_MULTILINE)
+    os.chmod(FILENAMES.DIST_SHELL_MULTILINE, 0o755)
 
 
 def build_copy():
-    shutil.copy('database.txt', 'dist/fortune-lyric-source.txt')
-    print_file_size('dist/fortune-lyric-source.txt')
+    shutil.copy(FILENAMES.SOURCE_DATABASE, FILENAMES.DIST_DB)
+    print_file_size(FILENAMES.DIST_DB)
 
 
-def build_cloudflare_kv_publish(namespace_id: str):
-    if not os.path.exists("dist/fortune-lyric.json"):
-        print(colored('red', 'Error:'), 
-              'dist/fortune-lyric.json 不存在，'
-              'build_cloudflare_kv_publish() 必须在 build_json() 之后调用')
+def build_publish(namespace_id: str):
+    if not os.path.exists(FILENAMES.DIST_JSON):
+        print(colored('red', 'Error:'), f"文件 {FILENAMES.DIST_JSON} 不存在, build_publish 必须在 build_json 之后执行")
         sys.exit(-2)
-    result = os.system(f"wrangler kv:key put --namespace-id {namespace_id} fortune-lyric --path dist/fortune-lyric.json")
-    print(colored('yellow', 'Info:'), "命令返回值：", result)
+    result = os.system(f"wrangler kv:key put --namespace-id {namespace_id} fortune-lyric --path {FILENAMES.DIST_JSON}")
     if result != 0:
+        print(colored('yellow', 'Info:'), "命令返回值：", result)
         print(colored('red', 'Error:'), 'wrangler kv:key put 执行失败')
         sys.exit(-2)
+    print(colored('green', 'Success:'), 'wrangler kv:key put 执行成功')
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--publish', action='store_true', help='发布到 Cloudflare KV')
+    args = parser.parse_args()
+
+    if not args.publish:
+        print(colored('yellow', 'Info:'), '如需发布到 Cloudflare KV，请使用 --publish 参数。')
+
     database = load()
     build_json(database)
-    build_plain(database)
+    build_text(database)
     build_bash(database)
-    build_bash_banner(database)
+    build_bash_multiline(database)
     build_copy()
-    build_cloudflare_kv_publish("0addc370401c4b77b57c9d40fddf9ad6")
+    if args.publish:
+        build_publish("0addc370401c4b77b57c9d40fddf9ad6")

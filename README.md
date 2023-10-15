@@ -12,17 +12,41 @@
 
 ## 使用方法
 
-支持的使用方法包括：
- - 安装在电脑中，通过命令行输入 `fortune-lyric`，该命令将从数据库中随机选取一个歌词输出。（需要安装 bash；Windows 需要单独安装 bash，Linux/macOS 一般自带）
- - 也可以配置为 MOTD，在每次打开终端或登陆 SSH 时，显示随机歌词。
- - 通过网页 API 调用，在自己的博客或 App 中，嵌入随机歌词。（请遵守下文 #[版权](#版权) 一节的相关规定）
- - 在自己的程序中嵌入数据库，自行实现随机歌词。（请遵守下文 #[版权](#版权) 一节的相关规定）
+Fortune Lyric 支持多种使用方式：
+ - **在 Bash 中使用**：直接输出歌词、作为 SSH Banner (MOTD) 或通过管道输出给其他程序。
+ - **通过 API 调用**：适用于个人网站等网页场景。
+ - **下载数据库**：在自己的程序中嵌入数据库，自行实现随机歌词。
 
-### 在 bash 中使用
+无论您使用何种方式，都应遵守本项目的版权规定。请参见 [版权](#版权) 一节。
+
+您可以通过下面的链接获取最新的发布版本，如果 GitHub 下载过慢，请使用我们的 API 下载。
+
+| GitHub Release                   | API                       | Description           |
+| -------------------------------- | ------------------------- | --------------------- |
+| [fortune-lyric.sh]               | [bash]                    | 单行歌词 Shell 脚本     |
+| [fortune-lyric-multiline.sh]     | [bash-multiline]          | 多行歌词 Shell 脚本     |
+| [fortune-lyric.json]             | -                         | JSON 格式              |
+| [fortune-lyric.min.json]         | [json]                    | JSON 格式（最小化）     |
+| [fortune-lyric.txt]              | [text]                    | 单行文本格式           |
+| -                                | GET https://lty.vc/lyric  | API 调用接口           |
+
+[fortune-lyric.sh]:           https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.sh
+[fortune-lyric-multiline.sh]: https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric-multiline.sh
+[fortune-lyric.json]:         https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.json
+[fortune-lyric.min.json]:     https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.min.json
+[fortune-lyric.txt]:          https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.txt
+[database.txt]:               https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/database.txt
+[bash]:                       https://lty.vc/lyric/bash
+[bash-multiline]:             https://lty.vc/lyric/bash-multiline
+[json]:                       https://lty.vc/lyric/json
+[text]:                       https://lty.vc/lyric/text
+[database]:                   https://lty.vc/lyric/database
+
+### 在 Bash 中使用
 
 **单行歌词版：**
 ```bash
-curl -L https://lty.vc/lotd/bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
+curl -L https://lty.vc/lyric/bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
 ```
 显示效果如：
 ```
@@ -32,7 +56,7 @@ $ fortune-lyric
 
 **多行歌词版：**
 ```bash
-curl -L https://lty.vc/lotd/banner-bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
+curl -L https://lty.vc/lyric/bash-multiline -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
 ```
 显示效果如：
 ```
@@ -59,35 +83,16 @@ curl -L <安装地址> -o /etc/update-motd.d/25-fortune-lyric && chmod +x /etc/u
 ```
 
 ### 通过网页调用
-直接打开 https://lty.vc/lotd 即可获得随机歌词。
+直接打开 https://lty.vc/lyric 即可获得随机歌词。
 
 ```
-$ curl -L lty.vc/lotd
+$ curl -L lty.vc/lyric
 
 思念的含义在无尽生命中淡去
 帷幕落下喝彩响起 片刻后都沉寂
 ```
 
-### 下载数据库
-请在 GitHub Release 页面下载数据库文件。
-
-
-| Release File                  | Description            |
-| ----------------------------- | ---------------------- |
-| `fortune-lyric.json`          | JSON 格式              |
-| `fortune-lyric-minified.json` | JSON 格式（最小化）    |
-| `fortune-lyric.txt`           | 单行文本格式           |
-| `fortune-lyric-source.txt`    | 人类可读 (源代码) 格式 |
-
-
-如果 GitHub 下载过慢，也可以使用我们的镜像：
-
-| URL                               | Description            |
-| --------------------------------- | ---------------------- |
-| https://lty.vc/lotd/json          | JSON 格式              |
-| https://lty.vc/lotd/minified-json | JSON 格式（最小化）    |
-| https://lty.vc/lotd/txt           | 单行文本格式           |
-| https://lty.vc/lotd/source-txt    | 人类可读 (源代码) 格式 |
+详细的 API 文档请参见 [API 文档](https://docs.lty.vc/)。
 
 ## 数据库格式与约定
 数据收录要求为：
