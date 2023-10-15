@@ -1,10 +1,10 @@
-name: Check Database
+name: Lint Database
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build
+    name: Lint Database
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
