@@ -1,4 +1,4 @@
-name: Check File
+name: Check Database
 on: [push, pull_request]
 
 jobs:
