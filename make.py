@@ -3,7 +3,6 @@ import re
 import sys
 import json
 import shutil
-import argparse
 
 class FILENAMES:
     SOURCE_DATABASE       = 'database.txt'
@@ -180,31 +179,10 @@ def build_copy():
     print_file_size(FILENAMES.DIST_DB)
 
 
-def build_publish(namespace_id: str):
-    if not os.path.exists(FILENAMES.DIST_JSON):
-        print(colored('red', 'Error:'), f"文件 {FILENAMES.DIST_JSON} 不存在, build_publish 必须在 build_json 之后执行")
-        sys.exit(-2)
-    result = os.system(f"wrangler kv:key put --namespace-id {namespace_id} fortune-lyric --path {FILENAMES.DIST_JSON}")
-    if result != 0:
-        print(colored('yellow', 'Info:'), "命令返回值：", result)
-        print(colored('red', 'Error:'), 'wrangler kv:key put 执行失败')
-        sys.exit(-2)
-    print(colored('green', 'Success:'), 'wrangler kv:key put 执行成功')
-
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--publish', action='store_true', help='发布到 Cloudflare KV')
-    args = parser.parse_args()
-
-    if not args.publish:
-        print(colored('yellow', 'Info:'), '如需发布到 Cloudflare KV，请使用 --publish 参数。')
-
     database = load()
     build_json(database)
     build_text(database)
     build_bash(database)
     build_bash_multiline(database)
     build_copy()
-    if args.publish:
-        build_publish("0addc370401c4b77b57c9d40fddf9ad6")
