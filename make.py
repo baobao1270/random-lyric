@@ -40,7 +40,7 @@ def print_file_size(filename: str):
     size_kb = f"{size / 1024:.2f} KB"
     color = 'green' if size < 1024 * 10 else 'yellow'
     size_kb = "[" + colored(color, size_kb) + "]"
-    print(colored('green', 'Success:'), f"{filename:<35}", f"{size_kb:>30}")
+    print(colored('green', 'Success:'), f"{filename:<45}", f"{size_kb:>30}")
 
 
 def load():
