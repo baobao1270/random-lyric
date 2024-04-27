@@ -218,6 +218,16 @@ year = 4DIGIT
 
 注：`VCHAR` 为可见字符，在本文定义中不仅包括 ASCII 可见字符，也包括 Unicode 可见字符。
 
+## 构建
+Random Lyric 由 Python 编写。**Random Lyric 需要 Python 3.10 或更高版本，不需要任何其他依赖。**
+
+运行以下命令构建 Random Lyric：
+```bash
+python3 make.py
+```
+
+构建的产物位于 `dist/` 目录下。
+
 ## 版权
 
 **请注意：此项目不是开源软件。** 此项目的分发、使用、修改、衍生等相关规定均比开源项目更为严格。
