@@ -1,66 +1,74 @@
-# Fortune Lyric - 随机洛天依歌曲歌词
+# Random Lyric - 随机洛天依歌曲歌词
 
 > 总有一些不可思议的歌词<br>轻而易举地唱迸<br>人们历经风吹雨打的心
-> 
-> 　　　　-- _[幽天歌](https://space.bilibili.com/592784581), 「[中V宝藏歌曲挖掘站](https://vcmusic.org)」成员_
 
 此项目提供了一个 [洛天依](https://zh.wikipedia.org/zh-cn/%E6%B4%9B%E5%A4%A9%E4%BE%9D) 的经典曲目歌词选段的数据库，并以此实现了一个获得随机歌词的程序。
 
 灵感来源：[一言](https://hitokoto.cn/)、[Fortune](https://en.wikipedia.org/wiki/Fortune_(Unix))。
 
-歌词保存在 [database.txt](database.txt) 中。若您需要提交歌词，请提交 PR 或者联系 i@lty.vc。提交歌词时，请遵守 #[数据库格式与约定](#数据库格式与约定)。
+歌词保存在 [database.txt](database.txt) 中。若您需要提交歌词，请提交 PR 或者联系 i@lty.vc。提交歌词时，请遵守 [数据库格式与约定](#数据库格式与约定)。
 
 ## 使用方法
 
-Fortune Lyric 支持多种使用方式：
- - **在 Bash 中使用**：直接输出歌词、作为 SSH Banner (MOTD) 或通过管道输出给其他程序。
- - **通过 API 调用**：适用于个人网站等网页场景。
+Random Lyric 支持多种使用方式：
+ - **在 Shell 中作为命令使用**：类似 `fortune` 命令，可以在终端中显示随机歌词。
+ - **配置为 `update-motd`**：在 Linux 登录时显示随机歌词。
+ - **通过 HTTP API 调用**：适用于个人网站等网页场景。
+ - **通过 RFC 865 QOTD/QOTDS 协议调用**：适用于 Telnet、无法使用 HTTPS 等场景。
  - **下载数据库**：在自己的程序中嵌入数据库，自行实现随机歌词。
 
 无论您使用何种方式，都应遵守本项目的版权规定。请参见 [版权](#版权) 一节。
 
 您可以通过下面的链接获取最新的发布版本，如果 GitHub 下载过慢，请使用我们的 API 下载。
 
-| GitHub Release                   | API                       | Description           |
-| -------------------------------- | ------------------------- | --------------------- |
-| [fortune-lyric.sh]               | [bash]                    | 单行歌词 Shell 脚本     |
-| [fortune-lyric-multiline.sh]     | [bash-multiline]          | 多行歌词 Shell 脚本     |
-| [fortune-lyric.json]             | -                         | JSON 格式              |
-| [fortune-lyric.min.json]         | [json]                    | JSON 格式（最小化）     |
-| [fortune-lyric.txt]              | [text]                    | 单行文本格式           |
-| -                                | GET https://lty.vc/lyric  | API 调用接口           |
+| GitHub Release             | HTTP API                  | Description           |
+| -------------------------- | ------------------------- | --------------------- |
+| [update-motd.sh]           | [bash]                    | 单行歌词 Bash  脚本     |
+| [update-motd-multiline.sh] | [bash-multiline]          | 多行歌词 Bash  脚本     |
+| [data.json]                | -                         | JSON 格式              |
+| [data.min.json]            | [json]                    | JSON 格式（最小化）     |
+| [lines.txt]                | [text]                    | 单行文本格式           |
+| [database.txt]             |                           | 原始数据库格式          |
+| -                          | GET https://lty.vc/lyric  | API 调用接口           |
 
-[fortune-lyric.sh]:           https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.sh
-[fortune-lyric-multiline.sh]: https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric-multiline.sh
-[fortune-lyric.json]:         https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.json
-[fortune-lyric.min.json]:     https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.min.json
-[fortune-lyric.txt]:          https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/fortune-lyric.txt
-[database.txt]:               https://github.com/luotianyi-dev/fortune-lyric/releases/latest/download/database.txt
-[bash]:                       https://lty.vc/lyric/bash
-[bash-multiline]:             https://lty.vc/lyric/bash-multiline
-[json]:                       https://lty.vc/lyric/json
-[text]:                       https://lty.vc/lyric/text
-[database]:                   https://lty.vc/lyric/database
+[random-lyric-update-motd.sh]:           https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd.sh
+[random-lyric-update-motd-multiline.sh]: https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd-multiline.sh
+[random-lyric-data.json]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.json
+[random-lyric-data.min.json]:            https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.min.json
+[random-lyric-lines.txt]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-lines.txt
+[random-lyric-database.txt]:             https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-database.txt
+[bash]:           https://lty.vc/lyric/bash
+[bash-multiline]: https://lty.vc/lyric/bash-multiline
+[json]:           https://lty.vc/lyric/json
+[text]:           https://lty.vc/lyric/text
+[database]:       https://lty.vc/lyric/database
 
-### 在 Bash 中使用
+### 在 Shell 中作为命令使用
+Random Lyric 最终的产物包括一个 Bash 脚本，并可直接运行。您需要预先安装 Bash。
+
+建议您将 Random Lyric 作为 Fortune 的 Symlink。
 
 **单行歌词版：**
 ```bash
-curl -L https://lty.vc/lyric/bash -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
+curl -Lo /usr/local/bin/random-lyric https://lty.vc/lyric/bash && \
+chmod +x /usr/local/bin/random-lyric && \
+ln    -s /usr/local/bin/random-lyric /usr/local/bin/fortune
 ```
 显示效果如：
 ```
-$ fortune-lyric
+$ random-lyric
 思念的含义在无尽生命中淡去 帷幕落下喝彩响起 片刻后都沉寂
 ```
 
 **多行歌词版：**
 ```bash
-curl -L https://lty.vc/lyric/bash-multiline -o /usr/local/bin/fortune-lyric && chmod +x /usr/local/bin/fortune-lyric
+curl -Lo /usr/local/bin/random-lyric https://lty.vc/lyric/bash-multiline && \
+chmod +x /usr/local/bin/random-lyric && \
+ln    -s /usr/local/bin/random-lyric /usr/local/bin/fortune
 ```
 显示效果如：
 ```
-$ fortune-lyric
+$ random-lyric
 思念的含义在无尽生命中淡去
 帷幕落下喝彩响起 片刻后都沉寂
 
@@ -69,20 +77,35 @@ $ fortune-lyric
 
 ### 配置为 SSH Banner
 **Ubuntu / Debian**
-将上面的命令替换为：
 ```bash
-curl -L <安装地址> -o /etc/update-motd.d/25-fortune-lyric && chmod +x /etc/update-motd.d/25-fortune-lyric
+# 单行歌词版
+curl -Lo /etc/update-motd.d/50-random-lyric https://lty.vc/lyric/bash && \
+chmod +x /etc/update-motd.d/50-random-lyric
+
+# 多行歌词版
+curl -Lo /etc/update-motd.d/50-random-lyric https://lty.vc/lyric/bash-multiline && \
+chmod +x /etc/update-motd.d/50-random-lyric
 ```
+
+对于 Ubuntu，您可能将上面命令中的 `50` 替换为更大的值，以防止干扰已有的 `update-motd` 顺序。
 
 **Arch Linux**
 ```bash
+# 安装依赖并配置 update-motd
 pacman -S run-parts bash curl
-mkdir -p /etc/update-motd.d
+mkdir  -p /etc/update-motd.d
 echo 'session    optional    pam_exec.so    stdout /usr/bin/run-parts /etc/update-motd.d' >> /etc/pam.d/system-login
-curl -L <安装地址> -o /etc/update-motd.d/25-fortune-lyric && chmod +x /etc/update-motd.d/25-fortune-lyric
+
+# 单行歌词版
+curl -Lo /etc/update-motd.d/50-random-lyric https://lty.vc/lyric/bash && \
+chmod +x /etc/update-motd.d/50-random-lyric
+
+# 多行歌词版
+curl -Lo /etc/update-motd.d/50-random-lyric https://lty.vc/lyric/bash-multiline && \
+chmod +x /etc/update-motd.d/50-random-lyric
 ```
 
-### 通过网页调用
+### 通过 HTTP API 调用
 直接打开 https://lty.vc/lyric 即可获得随机歌词。
 
 ```
@@ -92,7 +115,7 @@ $ curl -L lty.vc/lyric
 帷幕落下喝彩响起 片刻后都沉寂
 ```
 
-详细的 API 文档请参见 [API 文档](https://docs.lty.vc/)。
+详细的 API 文档请参见 [API 文档](https://lty.vc/docs)。
 
 ## 数据库格式与约定
 数据收录要求为：
@@ -159,8 +182,8 @@ year = 4DIGIT
 **请注意：此项目不是开源软件。** 此项目的分发、使用、修改、衍生等相关规定均比开源项目更为严格。
 
  1. 代码部分。代码部分指的是除了本项目的 `database.txt` 以外，所有在本项目 Git 仓库中的代码。此项目的代码部分由 ChatGPT 所编写。目前 AI 编写的代码版权所属在法律界尚不明确，用户应自行承担相关风险。此项目的贡献者放弃未来一切可能的对此项目代码部分的版权主张。
- 2. 数据库部分。数据库指的是本项目中 `database.txt` 的部分。此项目的数据库部分为歌词，其著作权属于原著作权人。您在使用过程中，应遵守中文虚拟歌手社区的相关规定，包括但不限于[《Vsinger同人创作规约》](https://vsinger.com/aboutus#%E7%89%88%E6%9D%83%E8%AF%B4%E6%98%8E)。此外，您还需要遵守歌曲原作者的二次创作规定。您对此项目的任何分发、使用、修改、衍生等行为，均应确保符合歌词原作者的相关规定或获得授权。此项目的贡献者基于对相关数据的收集、整理、组织的贡献，要求您在使用此项目数据库部分及其产物时，遵守更加严格的限制。
- 3. API 调用。若你使用 API 调用方式使用本项目，即代表您同意 lty.vc 的服务政策和隐私条款。lty.vc 有权收集您调用 API 的服务器信息、软件信息和网络信息，若通过前端 CROS 方式调用，lty.vc 亦会收集您的用户的设备信息、浏览器信息和网络信息。您应将 lty.vc 的隐私政策及所收集的信息告知您的用户。以商业为目的的网站、App、软件，包括但不限于要求用户付费以解锁内容、通过网站销售实体或虚拟产品的网站，不得使用本项目的 API 服务。lty.vc 有权对调用 API 的网站、App、软件进行评估，若相关网站、App、软件含有违反法律法规规定的内容，或含有对虚拟歌手及虚拟歌手创作者攻击、侮辱、抹黑内容的，lty.vc 有权终止其服务。通过 API 调用的，应在网站底部或友情链接页面，标明使用了由「传输控制协议TCP」开发的 lty.vc API 服务，并标明「传输控制协议TCP」的哔哩哔哩账号地址 https://space.bilibili.com/1425000748 和 lty.vc 的 API 地址 https://docs.lty.vc/ 。
+ 2. 数据库部分。数据库指的是本项目中 `database.txt` 的部分。此项目的数据库部分为歌词，其著作权属于原著作权人。您在使用过程中，应遵守中文虚拟歌手社区的相关规定。此外，您还需要遵守歌曲原作者的二次创作规定。您对此项目的任何分发、使用、修改、衍生等行为，均应确保符合歌词原作者的相关规定或获得授权。此项目的贡献者基于对相关数据的收集、整理、组织的贡献，要求您在使用此项目数据库部分及其产物时，遵守更加严格的限制。
+ 3. API 调用。若你使用 API 调用方式使用本项目，即代表您同意 lty.vc 的服务政策和隐私条款。lty.vc 有权收集您调用 API 的服务器信息、软件信息和网络信息，若通过前端 CROS 方式调用，lty.vc 亦会收集您的用户的设备信息、浏览器信息和网络信息。您应将 lty.vc 的隐私政策及所收集的信息告知您的用户。以商业为目的的网站、App、软件，包括但不限于要求用户付费以解锁内容、通过网站销售实体或虚拟产品的网站，不得使用本项目的 API 服务。lty.vc 有权对调用 API 的网站、App、软件进行评估，若相关网站、App、软件含有违反法律法规规定的内容，或含有对虚拟歌手及虚拟歌手创作者攻击、侮辱、抹黑内容的，lty.vc 有权终止其服务。
  4. 产物分发。产物指的是本项目的编译结果，即将本项目的数据库部分输入本项目的代码部分，经过代码部分处理得到的文件。使用 GitHub Release 及 lty.vc 分发的产物，为官方产物。用户使用此项目的 Git 仓库，运行代码部分得到的文件，为非官方产物。由于产物内包括数据库部分的内容，故分发、使用、修改产物或将产物嵌入您的产品，亦需遵守中文虚拟歌手社区的相关规定及歌曲原作者的二次创作规定，或获得相关授权。在分发产物时，应向用户提供此项目的许可证，即本文档「版权」一节 1 至 10 条的全部内容。
  5. 非商业使用。您不得以商业目的使用此项目。您不得将此项目的数据库部分或产物嵌入任何商用产品或服务。以企业、事业单位、非盈利组织、社会团体及任何法人性质的组织为主体开办的服务或生产的产品，不得嵌入此项目的数据库部分或产物。您不得在雇主、学校、研究所等您所在单位的计算机上使用此项目的产物，除非您的所在单位为以中文虚拟歌手创作为主要业务。
  6. 与您的产品隔离。若您在您的项目、产品或服务中使用、分发或嵌入此项目的数据库部分或产物，无论您的项目、产品或服务是否开发源代码、是否为商业性质，您都应采取措施将此项目的数据库部分或产物与您的项目、产品或服务隔离。对未形成有效隔离的项目，您的项目、产品或服务的版权声明及主张，对使用、分发或嵌入此项目数据库或产物的部分无效。您不得对本项目及其产物进行再许可。

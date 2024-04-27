@@ -21,9 +21,9 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/fortune-lyric.sh
-            dist/fortune-lyric-multiline.sh
-            dist/fortune-lyric.json
-            dist/fortune-lyric.min.json
-            dist/fortune-lyric.txt
-            dist/database.txt
+            dist/random-lyric-update-motd.sh
+            dist/random-lyric-update-motd-multiline.sh
+            dist/random-lyric-data.json
+            dist/random-lyric-data.min.json
+            dist/random-lyric-lines.txt
+            dist/random-lyric-database.txt
