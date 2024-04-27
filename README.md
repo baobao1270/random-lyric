@@ -17,7 +17,7 @@ Random Lyric 支持多种使用方式：
  - **[通过 HTTP API 调用](#通过-http-api-调用)**：适用于个人网站等网页场景。
     - API 接口地址: `https://lty.vc/lyric`
  - **[通过 QOTD/QOTDS (RFC 865 Quote of the Day Protocol) 协议调用](#通过-qotdqotds-rfc-865-quote-of-the-day-protocol-协议调用)**：适用于 Telnet、无法使用 HTTPS 等场景。
-    - QOTD 明文协议服务器: `qotd.lty.vc:17`
+    - QOTD over TCP/UDP: `qotd.lty.vc:17`
     - QOTD over SSL/TLS 服务器: `qotd.lty.vc:787`
 
 无论您使用何种方式，都应遵守本项目的版权规定。请参见 [版权](#版权) 一节。
@@ -124,7 +124,7 @@ $ curl -SsfL lty.vc/lyric
 Random Lyric 提供了实现了 [RFC 865](https://tools.ietf.org/html/rfc865) 的 QOTD 服务器。该协议是一个纯文本协议，因此您可以直接使用 `telnet` 命令测试连接我们的服务器。
 
 我们的服务器地址为：
- - QOTD 明文协议服务器: `qotd.lty.vc:17`
+ - QOTD over TCP/UDP 服务器: `qotd.lty.vc:17`
  - QOTD over SSL/TLS 服务器: `qotd.lty.vc:787`
 
 您可以使用以下命令测试连接：
@@ -140,6 +140,15 @@ Escape character is '^]'.
                 -- COP 《为了你唱下去》, 2016
 
 Connection closed by foreign host.
+```
+
+或者，使用 UDP 协议。需要注意的是，UDP 预期您发送单个 `\n` 字节。您需要设置 `-w10` 以设置 10 秒的超时时间（对于大多数情况而言足够）。否则，`nc` 将等待输入，直到您手动关闭连接。
+```bash
+$ echo -n | nc -w10 -u qotd.lty.vc 17
+
+思念的含义在无尽生命中淡去
+帷幕落下喝彩响起 片刻后都沉寂
+                -- COP 《为了你唱下去》, 2016
 ```
 
 QOTD over SSL/TLS 并不是 IETF 标准协议，但是 Random Lyric 为了安全性考虑，提供了该服务。您可以使用以下命令测试连接：
