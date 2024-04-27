@@ -7,19 +7,19 @@ import shutil
 class FILENAMES:
     SOURCE_DATABASE       = 'database.txt'
     TEMPLATE_SHELL_SCRIPT = 'template.sh'
-    DIST_SHELL            = 'dist/fortune-lyric.sh'
-    DIST_SHELL_MULTILINE  = 'dist/fortune-lyric-multiline.sh'
-    DIST_JSON             = 'dist/fortune-lyric.json'
-    DIST_JSON_MINIFIED    = 'dist/fortune-lyric.min.json'
-    DIST_TEXT             = 'dist/fortune-lyric.txt'
-    DIST_DB               = 'dist/database.txt'
+    DIST_MOTD             = 'dist/random-lyric-update-motd.sh'
+    DIST_MOTD_MULTILINE   = 'dist/random-lyric-update-motd-multiline.sh'
+    DIST_JSON             = 'dist/random-lyric-data.json'
+    DIST_JSON_MINIFIED    = 'dist/random-lyric-data.min.json'
+    DIST_LINES            = 'dist/random-lyric-lines.txt'
+    DIST_DB               = 'dist/random-lyric-database.txt'
 
 def colored(color: str, text: str) -> str:
     colors = {
-        'red': '\033[1;31m',
+        'red':   '\033[1;31m',
         'green': '\033[1;32m',
         'yellow': '\033[1;33m',
-        'blue': '\033[1;34m',
+        'blue':   '\033[1;34m',
     }
     return colors[color] + text + '\033[0m'
 
@@ -40,7 +40,7 @@ def print_file_size(filename: str):
     size_kb = f"{size / 1024:.2f} KB"
     color = 'green' if size < 1024 * 10 else 'yellow'
     size_kb = "[" + colored(color, size_kb) + "]"
-    print(colored('green', 'Success:'), f"{filename:<35}", f"{size_kb:>30}")
+    print(colored('green', 'Success:'), f"{filename:<45}", f"{size_kb:>30}")
 
 
 def load():
@@ -136,10 +136,10 @@ def build_text(database: list[dict]):
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs(os.path.dirname(FILENAMES.DIST_TEXT), exist_ok=True)
-    with open(FILENAMES.DIST_TEXT, 'w+', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(FILENAMES.DIST_LINES), exist_ok=True)
+    with open(FILENAMES.DIST_LINES, 'w+', encoding='utf-8') as f:
         f.write(lines)
-    print_file_size(FILENAMES.DIST_TEXT)
+    print_file_size(FILENAMES.DIST_LINES)
 
 
 def build_bash(database: list[dict]):
@@ -148,13 +148,13 @@ def build_bash(database: list[dict]):
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs(os.path.dirname(FILENAMES.DIST_SHELL), exist_ok=True)
+    os.makedirs(os.path.dirname(FILENAMES.DIST_MOTD), exist_ok=True)
     with open(FILENAMES.TEMPLATE_SHELL_SCRIPT, encoding='utf-8') as f:
         tmpl = f.read().strip()
-    with open(FILENAMES.DIST_SHELL, 'w+', encoding='utf-8') as f:
+    with open(FILENAMES.DIST_MOTD, 'w+', encoding='utf-8') as f:
         f.write(tmpl.replace('%%DATABASE%%', lines) + "\n")
-    print_file_size(FILENAMES.DIST_SHELL)
-    os.chmod(FILENAMES.DIST_SHELL, 0o755)
+    print_file_size(FILENAMES.DIST_MOTD)
+    os.chmod(FILENAMES.DIST_MOTD, 0o755)
 
 
 def build_bash_multiline(database: list[dict]):
@@ -165,13 +165,13 @@ def build_bash_multiline(database: list[dict]):
         for quote in database
     ]
     lines = '\n'.join(lines)
-    os.makedirs(os.path.dirname(FILENAMES.DIST_SHELL_MULTILINE), exist_ok=True)
+    os.makedirs(os.path.dirname(FILENAMES.DIST_MOTD_MULTILINE), exist_ok=True)
     with open(FILENAMES.TEMPLATE_SHELL_SCRIPT, encoding='utf-8') as f:
         tmpl = f.read().strip()
-    with open(FILENAMES.DIST_SHELL_MULTILINE, 'w+', encoding='utf-8') as f:
+    with open(FILENAMES.DIST_MOTD_MULTILINE, 'w+', encoding='utf-8') as f:
         f.write(tmpl.replace('%%DATABASE%%', lines) + "\n")
-    print_file_size(FILENAMES.DIST_SHELL_MULTILINE)
-    os.chmod(FILENAMES.DIST_SHELL_MULTILINE, 0o755)
+    print_file_size(FILENAMES.DIST_MOTD_MULTILINE)
+    os.chmod(FILENAMES.DIST_MOTD_MULTILINE, 0o755)
 
 
 def build_copy():
