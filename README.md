@@ -6,22 +6,26 @@
 
 灵感来源：[一言](https://hitokoto.cn/)、[Fortune](https://en.wikipedia.org/wiki/Fortune_(Unix))。
 
-歌词保存在 [database.txt](database.txt) 中。若您需要提交歌词，请提交 PR 或者联系 i@lty.vc。提交歌词时，请遵守 [数据库格式与约定](#数据库格式与约定)。
+歌词保存在 [database.txt](database.txt) 中。若您需要提交歌词，请提交 Pull Request 或者联系 [rlsubmission@lty.vc](mailto:rlsubmission@lty.vc)。提交歌词时，请遵守 [数据库格式与约定](#数据库格式与约定)。
 
 ## 使用方法
 
 Random Lyric 支持多种使用方式：
- - **在 Shell 中作为命令使用**：类似 `fortune` 命令，可以在终端中显示随机歌词。
- - **配置为 `update-motd`**：在 Linux 登录时显示随机歌词。
- - **通过 HTTP API 调用**：适用于个人网站等网页场景。
- - **通过 RFC 865 QOTD/QOTDS 协议调用**：适用于 Telnet、无法使用 HTTPS 等场景。
- - **下载数据库**：在自己的程序中嵌入数据库，自行实现随机歌词。
+ - **[下载数据库](#下载数据库)**：在自己的程序中嵌入数据库，自行实现随机歌词。
+ - **[在 Shell 中作为命令使用](#在-shell-中作为命令使用)**：类似 `fortune` 命令，可以在终端中显示随机歌词。
+ - **[配置为 `update-motd` (Message of the Day) 使用](#配置为-update-motd-message-of-the-day-使用)**：在 Linux 登录时显示随机歌词。
+ - **[通过 HTTP API 调用](#通过-http-api-调用)**：适用于个人网站等网页场景。
+    - API 接口地址: `https://lty.vc/lyric`
+ - **[通过 QOTD/QOTDS (RFC 865 Quote of the Day Protocol) 协议调用](#通过-qotdqotds-rfc-865-quote-of-the-day-protocol-协议调用)**：适用于 Telnet、无法使用 HTTPS 等场景。
+    - QOTD 明文协议服务器: `qotd.lty.vc:17`
+    - QOTD over SSL/TLS 服务器: `qotd.lty.vc:787`
 
 无论您使用何种方式，都应遵守本项目的版权规定。请参见 [版权](#版权) 一节。
 
+### 下载数据库
 您可以通过下面的链接获取最新的发布版本，如果 GitHub 下载过慢，请使用我们的 API 下载。
 
-| GitHub Release             | HTTP API                  | Description           |
+| GitHub Release             | HTTP Release              | Description           |
 | -------------------------- | ------------------------- | --------------------- |
 | [update-motd.sh]           | [bash]                    | 单行歌词 Bash  脚本     |
 | [update-motd-multiline.sh] | [bash-multiline]          | 多行歌词 Bash  脚本     |
@@ -29,14 +33,13 @@ Random Lyric 支持多种使用方式：
 | [data.min.json]            | [json]                    | JSON 格式（最小化）     |
 | [lines.txt]                | [text]                    | 单行文本格式           |
 | [database.txt]             |                           | 原始数据库格式          |
-| -                          | GET https://lty.vc/lyric  | API 调用接口           |
 
-[random-lyric-update-motd.sh]:           https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd.sh
-[random-lyric-update-motd-multiline.sh]: https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd-multiline.sh
-[random-lyric-data.json]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.json
-[random-lyric-data.min.json]:            https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.min.json
-[random-lyric-lines.txt]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-lines.txt
-[random-lyric-database.txt]:             https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-database.txt
+[update-motd.sh]:           https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd.sh
+[update-motd-multiline.sh]: https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd-multiline.sh
+[data.json]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.json
+[data.min.json]:            https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.min.json
+[lines.txt]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-lines.txt
+[database.txt]:             https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-database.txt
 [bash]:           https://lty.vc/lyric/bash
 [bash-multiline]: https://lty.vc/lyric/bash-multiline
 [json]:           https://lty.vc/lyric/json
@@ -75,7 +78,7 @@ $ random-lyric
                 -- COP 《为了你唱下去》, 2016
 ```
 
-### 配置为 SSH Banner
+### 配置为 `update-motd` (Message of the Day) 使用
 **Ubuntu / Debian**
 ```bash
 # 单行歌词版
@@ -106,16 +109,54 @@ chmod +x /etc/update-motd.d/50-random-lyric
 ```
 
 ### 通过 HTTP API 调用
-直接打开 https://lty.vc/lyric 即可获得随机歌词。
+访问 https://lty.vc/lyric 即可获得随机歌词。
 
-```
-$ curl -L lty.vc/lyric
+```bash
+$ curl -SsfL lty.vc/lyric
 
 思念的含义在无尽生命中淡去
 帷幕落下喝彩响起 片刻后都沉寂
 ```
 
-详细的 API 文档请参见 [API 文档](https://lty.vc/docs)。
+详细的 API 文档请参见 [API 文档](https://lty.vc/docs/#/Lyric/LyricHandler.GetRandomLyric)。
+
+### 通过 QOTD/QOTDS (RFC 865 Quote of the Day Protocol) 协议调用
+Random Lyric 提供了实现了 [RFC 865](https://tools.ietf.org/html/rfc865) 的 QOTD 服务器。该协议是一个纯文本协议，因此您可以直接使用 `telnet` 命令测试连接我们的服务器。
+
+我们的服务器地址为：
+ - QOTD 明文协议服务器: `qotd.lty.vc:17`
+ - QOTD over SSL/TLS 服务器: `qotd.lty.vc:787`
+
+您可以使用以下命令测试连接：
+
+```bash
+$ telnet qotd.lty.vc 17
+
+Connected to qotd.lty.vc.
+Escape character is '^]'.
+
+思念的含义在无尽生命中淡去
+帷幕落下喝彩响起 片刻后都沉寂
+                -- COP 《为了你唱下去》, 2016
+
+Connection closed by foreign host.
+```
+
+QOTD over SSL/TLS 并不是 IETF 标准协议，但是 Random Lyric 为了安全性考虑，提供了该服务。您可以使用以下命令测试连接：
+
+```bash
+$ openssl s_client -quiet -connect qotd.lty.vc:787
+depth=2 C=US, O=Google Trust Services LLC, CN=GTS Root R1
+verify return:1
+depth=1 C=US, O=Google Trust Services LLC, CN=GTS CA 1P5
+verify return:1
+depth=0 CN=qotd.lty.vc
+verify return:1
+
+思念的含义在无尽生命中淡去
+帷幕落下喝彩响起 片刻后都沉寂
+                -- COP 《为了你唱下去》, 2016
+```
 
 ## 数据库格式与约定
 数据收录要求为：
