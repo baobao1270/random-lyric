@@ -34,12 +34,12 @@ Random Lyric 支持多种使用方式：
 | [lines.txt]                | [text]                    | 单行文本格式           |
 | [database.txt]             |                           | 原始数据库格式          |
 
-[update-motd.sh]:           https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd.sh
-[update-motd-multiline.sh]: https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-update-motd-multiline.sh
-[data.json]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.json
-[data.min.json]:            https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-data.min.json
-[lines.txt]:                https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-lines.txt
-[database.txt]:             https://github.com/luotianyi-dev/random-lyric/releases/latest/download/random-lyric-database.txt
+[update-motd.sh]:           https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-update-motd.sh
+[update-motd-multiline.sh]: https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-update-motd-multiline.sh
+[data.json]:                https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-data.json
+[data.min.json]:            https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-data.min.json
+[lines.txt]:                https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-lines.txt
+[database.txt]:             https://github.com/baobao1270/random-lyric/releases/latest/download/random-lyric-database.txt
 [bash]:           https://lty.vc/lyric/bash
 [bash-multiline]: https://lty.vc/lyric/bash-multiline
 [json]:           https://lty.vc/lyric/json
